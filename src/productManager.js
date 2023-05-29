@@ -2,7 +2,7 @@ const ARCHIVO = "products.json";
 
 const fs = require("fs");
 
-class ProductManager {
+export class ProductManager {
   constructor() {
     this.products = [];
     this.path = ARCHIVO;
@@ -53,17 +53,7 @@ class ProductManager {
 
   async getProducts() {
     try {
-      if (this.products.length === 0) {
-        console.log("No hay productos disponibles");
-        //this.products = await readProducts(this.path);
-      } else {
-        console.log("Productos disponibles");
-        /*   this.products.forEach((product) => {
-          return product;
-        }); */
-        return this.products;
-        //return (this.products = readProducts(ARCHIVO));
-      }
+      return (this.products = readProducts(this.path));
     } catch (error) {
       console.log(error);
     }
@@ -142,22 +132,11 @@ class ProductManager {
       console.log(error);
     }
   }
-
-  async saveProductsToFile() {
-    try {
-      let text = JSON.stringify(this.products, null, 2);
-      await fs.promises.writeFile(this.path, text);
-      console.log("Los productos se han guardado correctamente en el archivo");
-    } catch (error) {
-      console.log(error);
-    }
-  }
 }
 
-(async () => {
+async () => {
   try {
     let test = new ProductManager();
-    console.log(test.getProducts());
     await test.addProduct(
       "Producto prueba",
       "Este es un producto prueba",
@@ -182,16 +161,11 @@ class ProductManager {
       "cba123",
       25
     );
-    console.log(test.getProducts());
-    await test.getProductById(2);
-    await test.getProductById(5);
-    await test.updateProduct(2, "price", 500);
-    await test.deleteProduct(3);
-    await test.deleteProduct(5);
+    return test.getProducts();
   } catch (error) {
     console.log(error);
   }
-})();
+};
 
 async function readProducts(file) {
   try {
@@ -203,4 +177,4 @@ async function readProducts(file) {
   }
 }
 
-module.exports = { ProductManager, readProducts };
+module.exports = { ProductManager };
