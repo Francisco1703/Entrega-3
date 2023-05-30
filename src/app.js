@@ -1,33 +1,44 @@
-//const express = require("express");
-import { Express } from "express";
-const PORT = 3000;
+const express = require("express");
+const PORT = 8080;
 const app = express();
-//const { ProductManager } = require("./productManager");
-import { ProductManager } from "./productManager";
+const { ProductManager } = require("./productManager");
 
 const productManager = new ProductManager();
-//const fs = require("fs");
-
-const productos = this.products;
 
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/products", async (req, res) => {
   try {
-    let productsList = await productManager.getProducts();
-    res.json(productsList);
+    const limit = parseInt(req.query.limit);
+    const productsList = await productManager.getProducts();
+    if (limit) {
+      let arrayProds = [...productsList];
+      const productsLimit = arrayProds.slice(0, limit);
+      return res.send(productsLimit);
+    } else {
+      res.json(productsList);
+    }
   } catch (error) {
     console.log(error);
   }
 });
 
-app.get("/products", async (req, res) => {
-  let limit = req.query.limit;
-  if (!limit || limit !== Number) return res.send({ productos });
-  let productosFiltrados = productos.slice(
-    (products) => products.limit === limit
-  );
-  res.send({ productos: productosFiltrados });
+app.get("/products/:id", async (req, res) => {
+  try {
+    const idProduct = req.params.id;
+    const products = await productManager.getProducts();
+    const existProduct = products.find((prod) => prod.id == idProduct);
+    const response = existProduct
+      ? existProduct
+      : {
+          error: `No se encuentra el producto con el id ${idProduct} en nuestra base de datos`,
+        };
+    res.status(existProduct ? 200 : 400).send(response);
+  } catch (error) {
+    console.log(error);
+  }
 });
+
+//app.listen(PORT, () => console.log(`http://localhost:${PORT}`));
 
 app.listen(PORT, () => console.log(`http://localhost:${PORT}`));

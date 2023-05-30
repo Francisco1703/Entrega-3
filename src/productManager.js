@@ -2,7 +2,7 @@ const ARCHIVO = "products.json";
 
 const fs = require("fs");
 
-export class ProductManager {
+class ProductManager {
   constructor() {
     this.products = [];
     this.path = ARCHIVO;
@@ -133,39 +133,6 @@ export class ProductManager {
     }
   }
 }
-
-async () => {
-  try {
-    let test = new ProductManager();
-    await test.addProduct(
-      "Producto prueba",
-      "Este es un producto prueba",
-      200,
-      "Sin imagen",
-      "abc123",
-      25
-    );
-    await test.addProduct(
-      "Producto prueba 2",
-      "Este es un producto prueba 2",
-      200,
-      "Sin imagen",
-      "abc321",
-      25
-    );
-    await test.addProduct(
-      "Producto prueba 3",
-      "Este es un producto prueba 3",
-      200,
-      "Sin imagen",
-      "cba123",
-      25
-    );
-    return test.getProducts();
-  } catch (error) {
-    console.log(error);
-  }
-};
 
 async function readProducts(file) {
   try {
